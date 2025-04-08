@@ -7,16 +7,23 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
-import { products } from '../data/products';
+import products from '../data/products'; // Updated dataset
 import ProductCard from '../components/productCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  // Dynamically generated category list
+  const categories = ['All', ...new Set(products.map(p => p.category))];
+
+  const filteredProducts = products.filter(
+    p =>
+      p.name.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedCategory === 'All' || p.category === selectedCategory)
   );
 
   return (
@@ -31,6 +38,29 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={setSearch}
         placeholderTextColor="#888"
       />
+
+      {/* Dynamic Category Buttons */}
+      <View style={styles.categoryContainer}>
+        {categories.map(cat => (
+          <TouchableOpacity
+            key={cat}
+            style={[
+              styles.categoryButton,
+              selectedCategory === cat && styles.selectedCategoryButton,
+            ]}
+            onPress={() => setSelectedCategory(cat)}
+          >
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === cat && styles.selectedCategoryText,
+              ]}
+            >
+              {cat}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {filteredProducts.length > 0 ? (
@@ -74,6 +104,28 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    flexWrap: 'wrap',
+  },
+  categoryButton: {
+    backgroundColor: '#ccc',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 8,
+    marginBottom: 8,
+    borderRadius: 20,
+  },
+  selectedCategoryButton: {
+    backgroundColor: '#000',
+  },
+  categoryText: {
+    color: '#000',
+  },
+  selectedCategoryText: {
+    color: '#fff',
   },
   noResults: {
     textAlign: 'center',
