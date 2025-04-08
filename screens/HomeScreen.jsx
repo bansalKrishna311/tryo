@@ -10,9 +10,11 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+
 import products from '../data/products';
 import ProductCard from '../components/productCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+
 
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
@@ -34,13 +36,16 @@ const HomeScreen = ({ navigation }) => {
       (selectedCategory === 'All' || p.category === selectedCategory)
   );
 
-  // 🧠 Setup Header Buttons
+  // 🧠 Setup Header Icons: 💬 🛒 👤
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: 'row', gap: 16, marginRight: 16 }}>
           <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
             <Text style={styles.headerIcon}>💬</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+            <Text style={styles.headerIcon}>🛒</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
             <Text style={styles.headerIcon}>👤</Text>
