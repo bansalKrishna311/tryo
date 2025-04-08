@@ -10,9 +10,20 @@ export const products = [
       name: 'Classic T-Shirt',
       price: '₹999',
       image: 'https://i.imgur.com/UYiroysl.jpg'
-    },
+    },    {
+        id: '3',
+        name: 'Denim pant',
+        price: '₹2499',
+        image: 'https://i.imgur.com/OdL0XPy.jpg'
+      },
+      {
+        id: '4',
+        name: 'Classic T-Shirt',
+        price: '₹999',
+        image: 'https://i.imgur.com/UYiroysl.jpg'
+      },
     {
-      id: '3',
+      id: '5',
       name: 'Black Hoodie',
       price: '₹1999',
       image: 'https://i.imgur.com/MABUbpDl.jpg'

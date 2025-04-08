@@ -1,42 +1,118 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 
-const TryOnScreen = ({ route }) => {
-  const { product } = route.params;
+const ProductCard = ({ product, onPress }) => {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    const checkWishlist = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('wishlist');
+        const wishlist = stored ? JSON.parse(stored) : [];
+        const exists = wishlist.some(item => item.id === product.id);
+        setIsWishlisted(exists);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    checkWishlist();
+  }, []);
+
+  const toggleWishlist = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('wishlist');
+      let wishlist = stored ? JSON.parse(stored) : [];
+
+      if (isWishlisted) {
+        // Remove from wishlist
+        wishlist = wishlist.filter(item => item.id !== product.id);
+        await AsyncStorage.setItem('wishlist', JSON.stringify(wishlist));
+        setIsWishlisted(false); 
+        scale.value = withSpring(0.8, { damping: 6 });
+        setTimeout(() => {
+          scale.value = withSpring(1);
+        }, 100);
+      } else {
+        // Add to wishlist
+        wishlist.push(product);
+        await AsyncStorage.setItem('wishlist', JSON.stringify(wishlist));
+        setIsWishlisted(true);
+        scale.value = withSpring(1.5, { damping: 5 });
+        setTimeout(() => {
+          scale.value = withSpring(1);
+        }, 150);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Try-On Simulation</Text>
-      <Image source={{ uri: product.image }} style={styles.tryOnImage} />
-      <Text style={styles.caption}>Mock try-on for: {product.name}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress} style={styles.card}>
+      <Image source={{ uri: product.image }} style={styles.image} />
+      <Text style={styles.name}>{product.name}</Text>
+      <Text style={styles.price}>{product.price}</Text>
+
+      <TouchableOpacity onPress={toggleWishlist} style={styles.heartIcon}>
+        <Animated.View style={animatedStyle}>
+          <Icon
+            name={isWishlisted ? 'heart' : 'heart-outline'}
+            size={24}
+            color={isWishlisted ? '#f00' : '#f44'}
+          />
+        </Animated.View>
+      </TouchableOpacity>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+  card: {
+    backgroundColor: '#fff',
+    marginBottom: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 3,
+    padding: 10
   },
-  title: {
-    color: '#fff',
-    fontSize: 24,
-    marginBottom: 20
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 10
   },
-  tryOnImage: {
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    borderWidth: 4,
-    borderColor: '#fff'
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold'
   },
-  caption: {
-    color: '#ccc',
-    marginTop: 16,
-    fontSize: 16
+  price: {
+    color: '#666',
+    fontSize: 16,
+    marginTop: 4
+  },
+  heartIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 6,
+    elevation: 5
   }
 });
 
-export default TryOnScreen;
+export default ProductCard;
