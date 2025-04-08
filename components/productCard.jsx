@@ -48,6 +48,11 @@ const ProductCard = ({ product, onPress, onSave }) => {
       <Image source={{ uri: product.image }} style={styles.image} />
       <Text style={styles.name}>{product.name}</Text>
       <Text style={styles.price}>{product.price}</Text>
+      <View style={{ flexDirection: 'row', marginTop: 6 }}>
+  {[...Array(5)].map((_, i) => (
+    <Icon key={i} name="star" size={18} color={i < 4 ? '#ffc107' : '#ddd'} />
+  ))}
+</View>
 
       {/* Animated Heart Icon */}
       <TouchableOpacity onPress={handleSave} style={styles.heartIcon}>
