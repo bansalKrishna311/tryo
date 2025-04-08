@@ -1,11 +1,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import { LoadingProvider, useLoading } from './contexts/LoadingContext';
+
 import HomeScreen from './screens/HomeScreen';
 import ProductDetailsScreen from './screens/ProductDetailsScreen';
 import TryOnScreen from './screens/TryOnScreen';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { LoadingProvider, useLoading } from './contexts/LoadingContext';
 import ProfileScreen from './screens/ProfileScreen';
 import FeedbackScreen from './screens/FeedbackScreen';
 import CartScreen from './screens/CartScreen';
@@ -30,7 +33,6 @@ const AppContent = () => {
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Feedback" component={FeedbackScreen} />
           <Stack.Screen name="Cart" component={CartScreen} />
-
         </Stack.Navigator>
       </NavigationContainer>
     </>
@@ -38,9 +40,11 @@ const AppContent = () => {
 };
 
 const App = () => (
-  <LoadingProvider>
-    <AppContent />
-  </LoadingProvider>
+  <GestureHandlerRootView style={{ flex: 1 }}>
+    <LoadingProvider>
+      <AppContent />
+    </LoadingProvider>
+  </GestureHandlerRootView>
 );
 
 export default App;

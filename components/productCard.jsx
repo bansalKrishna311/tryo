@@ -58,23 +58,29 @@ const ProductCard = ({
   const handleAddToCart = async () => {
     try {
       const stored = await AsyncStorage.getItem('cart');
-      let cart = stored ? JSON.parse(stored) : [];
-
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.quantity += 1;
-        cart = cart.map(item => (item.id === product.id ? existing : item));
+      const cart = stored ? JSON.parse(stored) : [];
+  
+      const alreadyInCart = cart.find(item => item.id === product.id);
+      if (!alreadyInCart) {
+        const updatedCart = [
+          ...cart,
+          {
+            ...product,
+            price: parseFloat(product.price.replace(/[^\d.]/g, '')), // cleans ₹ etc.
+            quantity: 1
+          }
+        ];
+        await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+        Alert.alert('Success', 'Added to cart!');
       } else {
-        cart.push({ ...product, quantity: 1 });
+        Alert.alert('Info', 'Already in cart.');
       }
-
-      await AsyncStorage.setItem('cart', JSON.stringify(cart));
-      Alert.alert('Success', 'Added to cart!');
     } catch (err) {
       console.error(err);
       Alert.alert('Error', 'Could not add to cart.');
     }
   };
+  
 
   const increaseQty = () => {
     if (onUpdateQuantity) {
