@@ -7,6 +7,7 @@ import TryOnScreen from './screens/TryOnScreen';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LoadingProvider, useLoading } from './contexts/LoadingContext';
 import ProfileScreen from './screens/ProfileScreen';
+import FeedbackScreen from './screens/FeedbackScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,7 @@ const AppContent = () => {
           <Stack.Screen name="Details" component={ProductDetailsScreen} />
           <Stack.Screen name="TryOn" component={TryOnScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-
+          <Stack.Screen name="Feedback" component={FeedbackScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

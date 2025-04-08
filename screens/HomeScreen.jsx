@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -22,7 +22,6 @@ const HomeScreen = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
-      // You can fetch or refresh product data here
       setRefreshing(false);
     }, 1000);
   };
@@ -34,6 +33,22 @@ const HomeScreen = ({ navigation }) => {
       p.name.toLowerCase().includes(search.toLowerCase()) &&
       (selectedCategory === 'All' || p.category === selectedCategory)
   );
+
+  // 🧠 Setup Header Buttons
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: 'row', gap: 16, marginRight: 16 }}>
+          <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
+            <Text style={styles.headerIcon}>💬</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <Text style={styles.headerIcon}>👤</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <KeyboardAvoidingView
@@ -146,6 +161,9 @@ const styles = StyleSheet.create({
     marginTop: 100,
     fontSize: 18,
     color: '#777',
+  },
+  headerIcon: {
+    fontSize: 22,
   },
 });
 
