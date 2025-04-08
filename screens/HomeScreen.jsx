@@ -8,16 +8,25 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
-import products from '../data/products'; // Updated dataset
+import products from '../data/products';
 import ProductCard from '../components/productCard';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Dynamically generated category list
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      // You can fetch or refresh product data here
+      setRefreshing(false);
+    }, 1000);
+  };
+
   const categories = ['All', ...new Set(products.map(p => p.category))];
 
   const filteredProducts = products.filter(
@@ -39,7 +48,6 @@ const HomeScreen = ({ navigation }) => {
         placeholderTextColor="#888"
       />
 
-      {/* Dynamic Category Buttons */}
       <View style={styles.categoryContainer}>
         {categories.map(cat => (
           <TouchableOpacity
@@ -62,7 +70,13 @@ const HomeScreen = ({ navigation }) => {
         ))}
       </View>
 
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => (
             <Animated.View
