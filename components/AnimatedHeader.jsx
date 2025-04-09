@@ -16,14 +16,11 @@ const AnimatedHeader = ({
   subtitle = 'Premium Products',
 }) => {
   const iconAnimatedStyle = useAnimatedStyle(() => {
-    const scale = interpolate(
-      scrollY.value,
-      [0, 100],
-      [1, 0.85],
-      Extrapolation.CLAMP
-    );
+    const scale = interpolate(scrollY.value, [0, 100], [1, 0.85], Extrapolation.CLAMP);
+    const opacity = interpolate(scrollY.value, [0, 100], [1, 0.5], Extrapolation.CLAMP);
     return {
       transform: [{ scale }],
+      opacity,
     };
   });
 
@@ -40,6 +37,7 @@ const AnimatedHeader = ({
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.subtitle}>{subtitle}</Text>
           </View>
+
           <Animated.View style={[styles.iconsContainer, iconAnimatedStyle]}>
             <TouchableOpacity
               style={styles.iconButton}
