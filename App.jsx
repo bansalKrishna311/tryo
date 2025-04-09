@@ -45,21 +45,25 @@ const AppContent = () => {
         textStyle={{ color: '#fff' }}
       />
       <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-  {showOnboarding ? (
-    <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-  ) : (
-    <>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Details" component={ProductDetailsScreen} />
-      <Stack.Screen name="TryOn" component={TryOnScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Feedback" component={FeedbackScreen} />
-      <Stack.Screen name="Cart" component={CartScreen} />
-    </>
-  )}
-</Stack.Navigator>
-
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {showOnboarding ? (
+            <Stack.Screen
+              name="Onboarding"
+              children={() => (
+                <OnboardingScreen onFinish={() => setShowOnboarding(false)} />
+              )}
+            />
+          ) : (
+            <>
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="Details" component={ProductDetailsScreen} />
+              <Stack.Screen name="TryOn" component={TryOnScreen} />
+              <Stack.Screen name="Profile" component={ProfileScreen} />
+              <Stack.Screen name="Feedback" component={FeedbackScreen} />
+              <Stack.Screen name="Cart" component={CartScreen} />
+            </>
+          )}
+        </Stack.Navigator>
       </NavigationContainer>
     </>
   );
