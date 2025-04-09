@@ -98,7 +98,7 @@ const ProductCard = ({
     <TouchableOpacity onPress={onPress} style={styles.card}>
       <Image source={{ uri: product.image }} style={styles.image} />
       <Text style={styles.name}>{product.name}</Text>
-      <Text style={styles.price}>₹ {product.price}</Text>
+      <Text style={styles.price}>{product.price}</Text>
 
       <View style={{ flexDirection: 'row', marginTop: 6 }}>
         {[...Array(5)].map((_, i) => (
