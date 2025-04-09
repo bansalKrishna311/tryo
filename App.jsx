@@ -45,7 +45,7 @@ const AppContent = () => {
         textStyle={{ color: '#fff' }}
       />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator >
           {showOnboarding ? (
             <Stack.Screen
               name="Onboarding"
